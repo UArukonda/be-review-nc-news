@@ -4,6 +4,7 @@ const app = require("../db/app.js");
 const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const endpoints = require("../endpoints.json");
+const { toBeSortedBy } = require("jest-sorted");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -72,7 +73,7 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe.only("/api/articles", () => {
+describe("/api/articles", () => {
   test("GET: 200 respond with the array of article objects", () => {
     return request(app)
       .get("/api/articles")
@@ -84,25 +85,25 @@ describe.only("/api/articles", () => {
             title: expect.any(String),
             topic: expect.any(String),
             author: expect.any(String),
-            body: expect.any(String),
             created_at: expect.any(String),
             votes: expect.any(Number),
             article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
           });
         }
       });
   });
-  //   test("GET: 200 return articles sorted by given query(date)", () => {
-  //     return request(app)
-  //       .get("/api/articles?sort_by=created_at")
-  //       .expect(200)
-  //       .then(({ body }) => {
-  //         expect(body.articles).toBeSortedBy("created_at", {
-  //           ascending: false,
-  //           coerce: true,
-  //         });
-  //       });
-  //   });
+  test("GET: 200 return articles sorted by given query(date)", () => {
+    return request(app)
+      .get("/api/articles?sort_by=created_at")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", {
+          ascending: false,
+          coerce: true,
+        });
+      });
+  });
 });
 
 describe("GET: 400 responds with appropriate error message when given invalid URLs", () => {
