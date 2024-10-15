@@ -54,7 +54,7 @@ describe("/api/articles/:article_id", () => {
         });
       });
   });
-  test("GET: 400 return Bad request", () => {
+  test("GET: 400 responds with an appropriate status and error message when given an invalid id", () => {
     return request(app)
       .get("/api/articles/not-a-number")
       .expect(400)
@@ -62,7 +62,7 @@ describe("/api/articles/:article_id", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
-  test("GET: 404 return Not found", () => {
+  test("GET: 404 responds with an appropriate status and error message when given a non-existent id", () => {
     return request(app)
       .get("/api/articles/999")
       .expect(404)
@@ -72,7 +72,40 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe("bad Urls", () => {
+describe.only("/api/articles", () => {
+  test("GET: 200 respond with the array of article objects", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        for (const article of body.articles) {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+          });
+        }
+      });
+  });
+  //   test("GET: 200 return articles sorted by given query(date)", () => {
+  //     return request(app)
+  //       .get("/api/articles?sort_by=created_at")
+  //       .expect(200)
+  //       .then(({ body }) => {
+  //         expect(body.articles).toBeSortedBy("created_at", {
+  //           ascending: false,
+  //           coerce: true,
+  //         });
+  //       });
+  //   });
+});
+
+describe("GET: 400 responds with appropriate error message when given invalid URLs", () => {
   test("GET: 404 - return 'Not Found' when bad url is requested", () => {
     return request(app)
       .get("/api/tipics")
