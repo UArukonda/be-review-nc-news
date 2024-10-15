@@ -2,4 +2,6 @@
 
 \dt
 
-select * from articles
+-- select * from articles
+SELECT * FROM articles ORDER BY created_at DESC;
+SELECT * FROM articles;
