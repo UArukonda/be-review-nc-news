@@ -1,4 +1,9 @@
-const { selectTopics, selectArticle } = require("../models/topics.model.js");
+const { request } = require("../app.js");
+const {
+  selectTopics,
+  selectArticleById,
+  selectArticles,
+} = require("../models/topics.model.js");
 
 function getTopics(req, res, next) {
   return selectTopics().then((topics) => {
@@ -6,9 +11,16 @@ function getTopics(req, res, next) {
   });
 }
 
-function getArticle(req, res, next) {
+function getArticles(req, res, next) {
+  //   const { sort_by, order } = request.query;
+  return selectArticles().then((articles) => {
+    res.status(200).send({ articles });
+  });
+}
+
+function getArticleById(req, res, next) {
   const articleId = req.params.article_id;
-  return selectArticle(articleId)
+  return selectArticleById(articleId)
     .then(([article]) => {
       res.status(200).send({ article });
     })
@@ -17,4 +29,4 @@ function getArticle(req, res, next) {
     });
 }
 
-module.exports = { getTopics, getArticle };
+module.exports = { getTopics, getArticleById, getArticles };
