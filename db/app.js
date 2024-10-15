@@ -3,7 +3,7 @@ const {
   getTopics,
   getArticleById,
   getArticles,
-} = require("./controllers/topics.controller.js");
+} = require("./controllers/controller.js");
 const app = express();
 const endpoints = require("../endpoints.json");
 
