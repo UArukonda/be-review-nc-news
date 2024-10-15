@@ -1,9 +1,13 @@
 const express = require("express");
-const { getTopics, getArticle } = require("./controllers/topics.controller.js");
+const {
+  getTopics,
+  getArticleById,
+  getArticles,
+} = require("./controllers/controller.js");
 const app = express();
 const endpoints = require("../endpoints.json");
 
-app.use(express.json());
+// app.use(express.json());
 
 //middleware
 app.get("/api/topics", getTopics);
@@ -12,7 +16,9 @@ app.get("/api", (req, res) => {
   res.status(200).send({ endpoints });
 });
 
-app.get("/api/articles/:article_id", getArticle);
+app.get("/api/articles/:article_id", getArticleById);
+
+app.get("/api/articles", getArticles);
 
 //last end point
 app.all("*", (request, response, next) => {
