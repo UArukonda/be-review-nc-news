@@ -3,6 +3,7 @@ const {
   getTopics,
   getArticleById,
   getArticles,
+  getCommentsByArticleId,
 } = require("./controllers/controller.js");
 const app = express();
 const endpoints = require("../endpoints.json");
@@ -20,6 +21,8 @@ app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles", getArticles);
 
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+
 //last end point
 app.all("*", (request, response, next) => {
   response.status(400).send({ msg: "Bad request" });
@@ -27,7 +30,7 @@ app.all("*", (request, response, next) => {
 
 //error handling
 app.use((err, req, res, next) => {
-  if (err.code === "22P02") {
+  if (err.code === "22P02" || err.code === "42703") {
     res.status(400).send({ msg: "Bad request" });
   }
   next(err);
