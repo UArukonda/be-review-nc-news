@@ -125,6 +125,16 @@ describe("GET: /api/articles/:article_id/comments", () => {
         }
       });
   });
+
+  test("GET: 200 respond with empty array when there are no comments associated to article", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
+      });
+  });
+
   test("GET: 400 responds with an appropriate status and error message when given an invalid id", () => {
     return request(app)
       .get("/api/articles/not-a-number/comments")
@@ -133,12 +143,13 @@ describe("GET: /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
+
   test("GET: 404 responds with an appropriate status and error message when given a non-existent id", () => {
     return request(app)
       .get("/api/articles/999/comments")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
+        expect(body.msg).toBe("Id Not Found");
       });
   });
 });
