@@ -1,4 +1,4 @@
 node_modules
 .env.*
-select.sql
+db/select.sql
 output.txt

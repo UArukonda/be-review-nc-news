@@ -4,11 +4,12 @@ const {
   getArticleById,
   getArticles,
   getCommentsByArticleId,
+  addCommentByArticleId,
 } = require("./controllers/controller.js");
 const app = express();
 const endpoints = require("../endpoints.json");
 
-// app.use(express.json());
+app.use(express.json());
 
 //middleware
 app.get("/api/topics", getTopics);
@@ -22,6 +23,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+
+app.post("/api/articles/:article_id/comments", addCommentByArticleId);
 
 //last end point
 app.all("*", (request, response, next) => {
