@@ -4,6 +4,7 @@ const {
   selectArticleById,
   selectArticles,
   selectCommentsByArticleId,
+  addComment,
 } = require("../models/model.js");
 
 function getTopics(req, res, next) {
@@ -13,16 +14,13 @@ function getTopics(req, res, next) {
 }
 
 function getArticles(req, res, next) {
-  //   let sort_by, order;
-  //   if (req.query) {
-  //     sort_by = req.query.sort_by;
-  //     order = req.query.order;
-  //   }
-  return selectArticles() //sort_by, order
+  return selectArticles()
     .then((articles) => {
       res.status(200).send({ articles });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      next(err);
+    });
 }
 
 function getArticleById(req, res, next) {
@@ -47,9 +45,22 @@ function getCommentsByArticleId(req, res, next) {
     });
 }
 
+function addCommentByArticleId(req, res, next) {
+  const comment = req.body;
+  const articleId = req.params.article_id;
+  return addComment(comment, articleId)
+    .then(([response]) => {
+      res.status(201).send({ insertedComment: response });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   getTopics,
   getArticleById,
   getArticles,
   getCommentsByArticleId,
+  addCommentByArticleId,
 };
