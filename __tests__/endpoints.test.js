@@ -95,13 +95,29 @@ describe("GET: /api/articles", () => {
   });
   test("GET: 200 return articles sorted by given query(date)", () => {
     return request(app)
-      .get("/api/articles?sort_by=created_at")
+      .get("/api/articles?sort_by=created_at&order=desc")
       .expect(200)
       .then(({ body }) => {
         expect(body.articles).toBeSortedBy("created_at", {
           ascending: false,
           coerce: true,
         });
+      });
+  });
+  test('GET: 400 return "Invalid sort_by value" when given invalid sort by', () => {
+    return request(app)
+      .get("/api/articles?sort_by=create_t&order=desc")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid sort_by value");
+      });
+  });
+  test('GET: 400 return "Invalid order value" when given invalid order', () => {
+    return request(app)
+      .get("/api/articles?sort_by=created_at&order=dsc")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid order value");
       });
   });
 });
@@ -321,7 +337,7 @@ describe("DELETE: /api/comment/:comments_id", () => {
   });
 });
 
-describe.only("GET: /api/users", () => {
+describe("GET: /api/users", () => {
   test("200: responds with an array of users", () => {
     return request(app)
       .get("/api/users")
