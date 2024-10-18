@@ -5,14 +5,17 @@ const {
   selectArticles,
   selectCommentsByArticleId,
   addComment,
+  updateArticle,
 } = require("../models/model.js");
 
+// TOPIC controllers
 function getTopics(req, res, next) {
   return selectTopics().then((topics) => {
     res.status(200).send({ topics });
   });
 }
 
+// ARTICLE controllers
 function getArticles(req, res, next) {
   return selectArticles()
     .then((articles) => {
@@ -34,6 +37,19 @@ function getArticleById(req, res, next) {
     });
 }
 
+function updateArticleById(req, res, next) {
+  const articleId = req.params.article_id;
+  const { inc_votes } = req.body;
+  return updateArticle(inc_votes, articleId)
+    .then(([article]) => {
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+// COMMENT controllers
 function getCommentsByArticleId(req, res, next) {
   const articleId = req.params.article_id;
   return selectCommentsByArticleId(articleId)
@@ -61,4 +77,5 @@ module.exports = {
   getArticles,
   getCommentsByArticleId,
   addCommentByArticleId,
+  updateArticleById,
 };

@@ -230,6 +230,68 @@ describe("POST: /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("PATCH: /api/articles/:article_id", () => {
+  test("PATCH: 200 respond with the corresponding article object when decrementing votes", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: -60 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article.article_id).toBe(1);
+        expect(body.article).toMatchObject({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+
+  test("PATCH: 200 respond with the corresponding article object when incrementing votes", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 60 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article.article_id).toBe(1);
+        expect(body.article).toMatchObject({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+
+  test("PATCH: 400 respond with bad request when inc-votes is missing", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+
+  test("POST: 404 responds with 'Article Not Found' when pass article_id does not exist", () => {
+    return request(app)
+      .patch("/api/articles/999")
+      .send({ inc_votes: 60 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article Not Found");
+      });
+  });
+});
+
 describe("GET: 400 responds with appropriate error message when given invalid URLs", () => {
   test("GET: 404 - return 'Not Found' when bad url is requested", () => {
     return request(app)
