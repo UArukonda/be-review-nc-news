@@ -1,10 +1,12 @@
 const db = require("../connection.js");
 const format = require("pg-format");
 
+// TOPIC models
 function selectTopics() {
   return db.query("SELECT * FROM topics").then((response) => response.rows);
 }
 
+// ARTICLE models
 function selectArticles(sort_by = "article_id", order = "ASC") {
   return db
     .query(
@@ -26,6 +28,62 @@ function selectArticleById(id) {
     });
 }
 
+function updateArticleee(votes, id) {
+  return db
+    .query(
+      `UPDATE articles SET votes = votes+$1 WHERE article_id = $2 RETURNING *`,
+      [votes, id]
+    )
+    .then((res) => {
+      if (res.rows.length === 0) {
+        // Check if the article exists
+        return db
+          .query("SELECT * FROM articles WHERE article_id = $1", [id])
+          .then((articleRes) => {
+            if (articleRes.rows.length === 0) {
+              // RETURN the Promise.reject to propagate it properly
+              return Promise.reject({ status: 404, msg: "Article Not Found" });
+            }
+          });
+      }
+      return res.rows;
+    })
+    .catch((err) => {
+      if (err.code === "23502") {
+        return Promise.reject({ status: 400, msg: "Bad request" });
+      }
+      return err;
+    });
+}
+
+function updateArticle(votes, id) {
+  return db
+    .query(
+      `UPDATE articles SET votes = votes+$1 WHERE article_id = $2 RETURNING *`,
+      [votes, id]
+    )
+    .then((res) => {
+      if (res.rows.length === 0) {
+        // Check if the article exists
+        return db
+          .query("SELECT * FROM articles WHERE article_id = $1", [id])
+          .then((articleRes) => {
+            if (articleRes.rows.length === 0) {
+              return Promise.reject({ status: 404, msg: "Article Not Found" });
+            }
+          });
+      }
+      return res.rows;
+    })
+    .catch((err) => {
+      if (err.code === "23502") {
+        return Promise.reject({ status: 400, msg: "Bad request" });
+      }
+      return Promise.reject(err);
+    });
+}
+
+// COMMENT models
 function selectCommentsByArticleId(id) {
   return db
     .query(
@@ -60,7 +118,8 @@ function addComment(comment, id) {
     })
     .catch((err) => {
       if (
-        err.detail === 'Key (author)=(abc) is not present in table "users".'
+        err.detail ===
+        `Key (author)=(${comment.username}) is not present in table "users".`
       ) {
         return Promise.reject({ status: 404, msg: "username does not exist" });
       } else if (err.code === "23503") {
@@ -84,4 +143,5 @@ module.exports = {
   selectArticles,
   selectCommentsByArticleId,
   addComment,
+  updateArticle,
 };
