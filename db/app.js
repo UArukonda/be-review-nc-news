@@ -6,6 +6,7 @@ const {
   getCommentsByArticleId,
   addCommentByArticleId,
   updateArticleById,
+  deleteComment,
 } = require("./controllers/controller.js");
 const app = express();
 const endpoints = require("../endpoints.json");
@@ -36,6 +37,9 @@ app.post("/api/articles/:article_id/comments", addCommentByArticleId);
 
 // task 8
 app.patch("/api/articles/:article_id", updateArticleById);
+
+//task 9
+app.delete("/api/comments/:comment_id", deleteComment);
 
 //last end point
 app.all("*", (request, response, next) => {
