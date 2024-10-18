@@ -321,6 +321,23 @@ describe("DELETE: /api/comment/:comments_id", () => {
   });
 });
 
+describe.only("GET: /api/users", () => {
+  test("200: responds with an array of users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        for (const user of body.users) {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        }
+      });
+  });
+});
+
 describe("GET: 400 responds with appropriate error message when given invalid URLs", () => {
   test("GET: 404 - return 'Not Found' when bad url is requested", () => {
     return request(app)

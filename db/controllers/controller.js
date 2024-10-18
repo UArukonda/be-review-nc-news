@@ -7,6 +7,7 @@ const {
   addComment,
   updateArticle,
   deleteCommentById,
+  selectUsers,
 } = require("../models/model.js");
 
 // TOPIC controllers
@@ -83,6 +84,15 @@ function deleteComment(req, res, next) {
     });
 }
 
+// USERS controllers
+function getUsers(req, res, next) {
+  return selectUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch((err) => next(err));
+}
+
 module.exports = {
   getTopics,
   getArticleById,
@@ -91,4 +101,5 @@ module.exports = {
   addCommentByArticleId,
   updateArticleById,
   deleteComment,
+  getUsers,
 };

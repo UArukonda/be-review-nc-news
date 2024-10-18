@@ -148,6 +148,13 @@ function deleteCommentById(id) {
     });
 }
 
+// USERS models
+function selectUsers() {
+  return db.query("SELECT * FROM users").then((res) => {
+    return res.rows;
+  });
+}
+
 module.exports = {
   selectTopics,
   selectArticleById,
@@ -156,4 +163,5 @@ module.exports = {
   addComment,
   updateArticle,
   deleteCommentById,
+  selectUsers,
 };

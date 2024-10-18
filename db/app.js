@@ -7,6 +7,7 @@ const {
   addCommentByArticleId,
   updateArticleById,
   deleteComment,
+  getUsers,
 } = require("./controllers/controller.js");
 const app = express();
 const endpoints = require("../endpoints.json");
@@ -40,6 +41,9 @@ app.patch("/api/articles/:article_id", updateArticleById);
 
 //task 9
 app.delete("/api/comments/:comment_id", deleteComment);
+
+//task 10
+app.get("/api/users", getUsers);
 
 //last end point
 app.all("*", (request, response, next) => {
