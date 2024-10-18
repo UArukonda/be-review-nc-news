@@ -7,14 +7,32 @@ function selectTopics() {
 }
 
 // ARTICLE models
-function selectArticles(sort_by = "article_id", order = "ASC") {
+function selectArticles(sort_by = "created_at", order = "asc") {
+  const allowedSorts = [
+    "author",
+    "title",
+    "article_id",
+    "topic",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  const allowedOrders = ["asc", "desc"];
+  if (!allowedSorts.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Invalid sort_by value" });
+  }
+
+  if (!allowedOrders.includes(order.toLowerCase())) {
+    return Promise.reject({ status: 400, msg: "Invalid order value" });
+  }
   return db
     .query(
-      `SELECT articles.author,articles.title,articles.article_id,articles.topic,articles.created_at,articles.votes, articles.article_img_url,CAST(COUNT(comments.body) AS INTEGER) AS comment_count FROM articles LEFT JOIN comments on articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY articles.created_at DESC`
+      `SELECT articles.author,articles.title,articles.article_id,articles.topic,articles.created_at,articles.votes, articles.article_img_url,CAST(COUNT(comments.body) AS INTEGER) AS comment_count FROM articles LEFT JOIN comments on articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order}`
     )
     .then((response) => {
       return response.rows;
-    });
+    })
+    .catch((err) => console.log(err));
 }
 
 function selectArticleById(id) {
@@ -25,34 +43,6 @@ function selectArticleById(id) {
         return Promise.reject({ status: 404, msg: "Id Not Found" });
       }
       return rows;
-    });
-}
-
-function updateArticleee(votes, id) {
-  return db
-    .query(
-      `UPDATE articles SET votes = votes+$1 WHERE article_id = $2 RETURNING *`,
-      [votes, id]
-    )
-    .then((res) => {
-      if (res.rows.length === 0) {
-        // Check if the article exists
-        return db
-          .query("SELECT * FROM articles WHERE article_id = $1", [id])
-          .then((articleRes) => {
-            if (articleRes.rows.length === 0) {
-              // RETURN the Promise.reject to propagate it properly
-              return Promise.reject({ status: 404, msg: "Article Not Found" });
-            }
-          });
-      }
-      return res.rows;
-    })
-    .catch((err) => {
-      if (err.code === "23502") {
-        return Promise.reject({ status: 400, msg: "Bad request" });
-      }
-      return err;
     });
 }
 

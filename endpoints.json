@@ -69,5 +69,37 @@
         "votes": 20
       }
     }
+  },
+  "PATCH: /api/articles/:article_id": {
+    "description": "updates one or multiple columns in article",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "title",
+        "topic": "topic",
+        "author": "author name",
+        "body": "comment",
+        "created_at": "date timestamp",
+        "votes": 100,
+        "article_img_url": "https://url-to-img"
+      }
+    }
+  },
+  "DELETE: /api/comment/:comments_id": {
+    "description": "deletes a comment from comments",
+    "queries": [],
+    "exampleResponse": {}
+  },
+  "GET: /api/users": {
+    "description": "fetches users from users",
+    "queries": [],
+    "exampleResponse": {
+      "comment": {
+        "username": "jsmith",
+        "name": "john smith",
+        "avatar_url": "link to avatar"
+      }
+    }
   }
 }
