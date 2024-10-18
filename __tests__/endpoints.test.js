@@ -292,6 +292,35 @@ describe("PATCH: /api/articles/:article_id", () => {
   });
 });
 
+describe("DELETE: /api/comment/:comments_id", () => {
+  test("DELETE: 204 for successfull deletion", () => {
+    return request(app)
+      .delete("/api/comments/4")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+
+  test('404: responds with "Comment not found" for non-existent comment', () => {
+    return request(app)
+      .delete("/api/comments/9999")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Comment not found");
+      });
+  });
+
+  test('400: responds with "Invalid comment ID" for malformed comment ID', () => {
+    return request(app)
+      .delete("/api/comments/notAnId")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+});
+
 describe("GET: 400 responds with appropriate error message when given invalid URLs", () => {
   test("GET: 404 - return 'Not Found' when bad url is requested", () => {
     return request(app)
