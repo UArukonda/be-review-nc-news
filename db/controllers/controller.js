@@ -20,6 +20,7 @@ function getTopics(req, res, next) {
 // ARTICLE controllers
 function getArticles(req, res, next) {
   const { sort_by, order } = req.query;
+  console.log({ sort_by, order });
   return selectArticles(sort_by, order)
     .then((articles) => {
       res.status(200).send({ articles });

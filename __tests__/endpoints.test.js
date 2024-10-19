@@ -120,6 +120,14 @@ describe("GET: /api/articles", () => {
         expect(body.msg).toBe("Invalid order value");
       });
   });
+
+  // xtest("should return 400 for invalid query parameters", async () => {
+  //   const response = await request(app).get(
+  //     "/api/articles?sor_by=title&oder=asc"
+  //   );
+  //   expect(response.status).toBe(400);
+  //   expect(response.body.error).toBe("Invalid sort_by parameter");
+  // });
 });
 
 describe("GET: /api/articles/:article_id/comments", () => {
@@ -253,15 +261,14 @@ describe("PATCH: /api/articles/:article_id", () => {
       .send({ inc_votes: -60 })
       .expect(200)
       .then(({ body }) => {
-        expect(body.article.article_id).toBe(1);
         expect(body.article).toMatchObject({
-          article_id: expect.any(Number),
+          article_id: 1,
           title: expect.any(String),
           topic: expect.any(String),
           author: expect.any(String),
           body: expect.any(String),
           created_at: expect.any(String),
-          votes: expect.any(Number),
+          votes: 40,
           article_img_url: expect.any(String),
         });
       });
@@ -273,15 +280,14 @@ describe("PATCH: /api/articles/:article_id", () => {
       .send({ inc_votes: 60 })
       .expect(200)
       .then(({ body }) => {
-        expect(body.article.article_id).toBe(1);
         expect(body.article).toMatchObject({
-          article_id: expect.any(Number),
+          article_id: 1,
           title: expect.any(String),
           topic: expect.any(String),
           author: expect.any(String),
           body: expect.any(String),
           created_at: expect.any(String),
-          votes: expect.any(Number),
+          votes: 160,
           article_img_url: expect.any(String),
         });
       });

@@ -16,33 +16,24 @@ app.use(express.json());
 
 //middleware
 
-// task 2
 app.get("/api/topics", getTopics);
 
-// task 3
 app.get("/api", (req, res) => {
   res.status(200).send({ endpoints });
 });
 
-// task 4
 app.get("/api/articles/:article_id", getArticleById);
 
-// task 5
 app.get("/api/articles", getArticles);
 
-// task 6
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
-// task 7
 app.post("/api/articles/:article_id/comments", addCommentByArticleId);
 
-// task 8
 app.patch("/api/articles/:article_id", updateArticleById);
 
-//task 9
 app.delete("/api/comments/:comment_id", deleteComment);
 
-//task 10
 app.get("/api/users", getUsers);
 
 //last end point
