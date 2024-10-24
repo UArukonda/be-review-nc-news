@@ -121,13 +121,13 @@ describe("GET: /api/articles", () => {
       });
   });
 
-  // xtest("should return 400 for invalid query parameters", async () => {
-  //   const response = await request(app).get(
-  //     "/api/articles?sor_by=title&oder=asc"
-  //   );
-  //   expect(response.status).toBe(400);
-  //   expect(response.body.error).toBe("Invalid sort_by parameter");
-  // });
+  test("should return 400 for invalid query parameters", async () => {
+    const response = await request(app).get(
+      "/api/articles?sor_by=title&oder=asc"
+    );
+    expect(response.status).toBe(400);
+    expect(response.body.msg).toBe("Invalid parameters");
+  });
 });
 
 describe("GET: /api/articles/:article_id/comments", () => {

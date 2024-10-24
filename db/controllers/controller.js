@@ -19,8 +19,12 @@ function getTopics(req, res, next) {
 
 // ARTICLE controllers
 function getArticles(req, res, next) {
+  const allowedParameters = ["sort_by", "order"];
+  const params = Object.keys(req.query);
   const { sort_by, order } = req.query;
-  console.log({ sort_by, order });
+  if (!params.every((param) => allowedParameters.includes(param))) {
+    return next({ status: 400, msg: "Invalid parameters" });
+  }
   return selectArticles(sort_by, order)
     .then((articles) => {
       res.status(200).send({ articles });
