@@ -7,7 +7,7 @@ function selectTopics() {
 }
 
 // ARTICLE models
-function selectArticles(sort_by = "created_at", order = "asc") {
+function selectArticles(sort_by = "created_at", order = "asc", topic) {
   const allowedSorts = [
     "author",
     "title",
@@ -18,21 +18,37 @@ function selectArticles(sort_by = "created_at", order = "asc") {
     "comment_count",
   ];
   const allowedOrders = ["asc", "desc"];
+
+  // check if sort_by values exist in db
   if (!allowedSorts.includes(sort_by)) {
     return Promise.reject({ status: 400, msg: "Invalid sort_by value" });
   }
 
+  // check if order value is correct
   if (!allowedOrders.includes(order.toLowerCase())) {
     return Promise.reject({ status: 400, msg: "Invalid order value" });
   }
+
+  let query = `SELECT articles.author,articles.title,articles.article_id,articles.topic,articles.created_at,articles.votes, articles.article_img_url,CAST(COUNT(comments.body) AS INTEGER) AS comment_count FROM articles LEFT JOIN comments on articles.article_id = comments.article_id`;
+  const queryParams = [];
+
+  // check if topic values exist in db
+  if (topic) {
+    query += ` WHERE topic = $1`;
+    queryParams.push(topic);
+  }
+
+  query += `
+  GROUP BY articles.article_id 
+  ORDER BY articles.${sort_by} ${order};
+`;
+
   return db
-    .query(
-      `SELECT articles.author,articles.title,articles.article_id,articles.topic,articles.created_at,articles.votes, articles.article_img_url,CAST(COUNT(comments.body) AS INTEGER) AS comment_count FROM articles LEFT JOIN comments on articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order}`
-    )
+    .query(query, queryParams)
     .then((response) => {
       return response.rows;
     })
-    .catch((err) => console.log(err));
+    .catch((err) => err);
 }
 
 function selectArticleById(id) {
