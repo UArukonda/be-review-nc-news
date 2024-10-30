@@ -120,13 +120,55 @@ describe("GET: /api/articles", () => {
         expect(body.msg).toBe("Invalid order value");
       });
   });
-
-  test("should return 400 for invalid query parameters", async () => {
+  test("GET: should return 400 for invalid query parameters", async () => {
     const response = await request(app).get(
       "/api/articles?sor_by=title&oder=asc"
     );
     expect(response.status).toBe(400);
     expect(response.body.msg).toBe("Invalid parameters");
+  });
+  test("GET: 400 return invalid format when given topic format is wrong", () => {
+    return request(app)
+      .get("/api/articles?topic=22")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid topic format");
+      });
+  });
+  xtest("GET: 404 return not found when given topic does not exist in the database ", () => {
+    return request(app)
+      .get("/api/articles?topic=chris")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Topic not found");
+      });
+  });
+  test("GET: 200 return all articles when given topic exist in the database associated to articles", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        for (const article of body.articles) {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        }
+      });
+  });
+  test("GET: 200 return empty array when given topic exist in the database but no article associated to it", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toEqual([]);
+      });
   });
 });
 

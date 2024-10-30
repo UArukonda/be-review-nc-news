@@ -19,13 +19,21 @@ function getTopics(req, res, next) {
 
 // ARTICLE controllers
 function getArticles(req, res, next) {
-  const allowedParameters = ["sort_by", "order"];
+  //fetching parameters (or) queries from endpoint
+  const { sort_by, order, topic } = req.query;
   const params = Object.keys(req.query);
-  const { sort_by, order } = req.query;
-  if (!params.every((param) => allowedParameters.includes(param))) {
+
+  // checking if parameters are valid
+  if (!validateParams(params)) {
     return next({ status: 400, msg: "Invalid parameters" });
   }
-  return selectArticles(sort_by, order)
+
+  // check if topic format is correct
+  if (topic && /[0-9]/.test(topic)) {
+    return next({ status: 400, msg: "Invalid topic format" });
+  }
+
+  return selectArticles(sort_by, order, topic)
     .then((articles) => {
       res.status(200).send({ articles });
     })
@@ -34,8 +42,14 @@ function getArticles(req, res, next) {
     });
 }
 
+function validateParams(params) {
+  const allowedParameters = ["sort_by", "order", "topic"];
+  return params.every((param) => allowedParameters.includes(param));
+}
+
 function getArticleById(req, res, next) {
   const articleId = req.params.article_id;
+
   return selectArticleById(articleId)
     .then(([article]) => {
       res.status(200).send({ article });
@@ -48,6 +62,7 @@ function getArticleById(req, res, next) {
 function updateArticleById(req, res, next) {
   const articleId = req.params.article_id;
   const { inc_votes } = req.body;
+
   return updateArticle(inc_votes, articleId)
     .then(([article]) => {
       res.status(200).send({ article });
@@ -60,6 +75,7 @@ function updateArticleById(req, res, next) {
 // COMMENT controllers
 function getCommentsByArticleId(req, res, next) {
   const articleId = req.params.article_id;
+
   return selectCommentsByArticleId(articleId)
     .then((comments) => {
       res.status(200).send({ comments });
@@ -70,6 +86,7 @@ function getCommentsByArticleId(req, res, next) {
 function addCommentByArticleId(req, res, next) {
   const comment = req.body;
   const articleId = req.params.article_id;
+
   return addComment(comment, articleId)
     .then(([response]) => {
       res.status(201).send({ insertedComment: response });
@@ -81,6 +98,7 @@ function addCommentByArticleId(req, res, next) {
 
 function deleteComment(req, res, next) {
   const { comment_id } = req.params;
+
   return deleteCommentById(comment_id)
     .then(([deletedComment]) => {
       res.status(204).send({ deletedComment });
