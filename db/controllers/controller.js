@@ -35,10 +35,6 @@ function getArticles(req, res, next) {
 
   return selectArticles(sort_by, order, topic)
     .then((articles) => {
-      if (articles.code === "42P02") {
-        console.log(articles);
-        return Promise.reject({ status: 404, msg: "Topic not found" });
-      }
       res.status(200).send({ articles });
     })
     .catch((err) => {

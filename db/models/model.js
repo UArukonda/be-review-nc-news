@@ -7,7 +7,7 @@ function selectTopics() {
 }
 
 // ARTICLE models
-function selectArticles(sort_by = "created_at", order = "asc", topic) {
+async function selectArticles(sort_by = "created_at", order = "asc", topic) {
   const allowedSorts = [
     "author",
     "title",

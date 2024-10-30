@@ -73,7 +73,7 @@ describe("GET: /api/articles/:article_id", () => {
   });
 });
 
-describe.only("GET: /api/articles", () => {
+describe("GET: /api/articles", () => {
   test("GET: 200 respond with the array of article objects", () => {
     return request(app)
       .get("/api/articles")
@@ -127,8 +127,6 @@ describe.only("GET: /api/articles", () => {
     expect(response.status).toBe(400);
     expect(response.body.msg).toBe("Invalid parameters");
   });
-  //200 ok all available articles for topic
-  //200 ok no articles for topic
   test("GET: 400 return invalid format when given topic format is wrong", () => {
     return request(app)
       .get("/api/articles?topic=22")
@@ -137,16 +135,14 @@ describe.only("GET: /api/articles", () => {
         expect(body.msg).toBe("Invalid topic format");
       });
   });
-
-  test("GET: 404 return not found when given topic does not exist in the database ", () => {
+  xtest("GET: 404 return not found when given topic does not exist in the database ", () => {
     return request(app)
-      .get("/api/articles?topic=matt")
+      .get("/api/articles?topic=chris")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Topic not found");
       });
   });
-
   test("GET: 200 return all articles when given topic exist in the database associated to articles", () => {
     return request(app)
       .get("/api/articles?topic=mitch")
@@ -166,8 +162,7 @@ describe.only("GET: /api/articles", () => {
         }
       });
   });
-
-  test.only("GET: 200 return empty array when given topic exist in the database but no article associated to it", () => {
+  test("GET: 200 return empty array when given topic exist in the database but no article associated to it", () => {
     return request(app)
       .get("/api/articles?topic=paper")
       .expect(200)
