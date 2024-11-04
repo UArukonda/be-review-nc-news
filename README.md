@@ -96,7 +96,7 @@ json
 
 <!-- Example Response: -->
 
-`````json
+json
 {
 "comment": {
 "article_id": 3,
@@ -106,7 +106,7 @@ json
 "created_at": 1604394720000,
 "votes": 20
 }
-}````
+}
 
 ## POST /api/articles/
 
@@ -115,11 +115,11 @@ json
 
 <!-- Request Body: -->
 
-````json
+json
 {
 "username": "commenter_name",
 "body": "Your comment text here"
-}````
+}
 
 <!-- Example Response: -->
 
@@ -188,4 +188,7 @@ json
 All endpoints return JSON objects and adhere to RESTful API principles.
 Error Handling: Each endpoint returns appropriate status codes and error messages for invalid requests.
 Authorization: Some endpoints may require authorization in a production setting.
-`````
+
+```
+
+```
