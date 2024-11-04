@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const {
   getTopics,
   getArticleById,
@@ -13,6 +14,7 @@ const app = express();
 const endpoints = require("../endpoints.json");
 
 app.use(express.json());
+app.use(cors());
 
 //middleware
 
