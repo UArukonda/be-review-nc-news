@@ -301,7 +301,7 @@ describe("POST: /api/articles/:article_id/comments", () => {
       });
   });
 
-  test.only("POST: 404 username does not exist", () => {
+  test("POST: 404 username does not exist", () => {
     return request(app)
       .post("/api/articles/5/comments")
       .send({ username: "abc", comment: "good one" })
