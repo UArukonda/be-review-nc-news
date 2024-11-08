@@ -143,9 +143,8 @@ json
 }
 }
 
-## GET /api/articles/
+## GET /api/articles/:article_id/comments
 
-/comments
 **Description**: Returns comments associated with a specific article by article_id.
 
 **Example Response**:
@@ -162,9 +161,8 @@ json
 }
 }
 
-## POST /api/articles/
+## POST /api/articles/:article_id/comments
 
-/comments
 **Description**: Adds a comment to a specific article by article_id.
 
 <!-- Request Body: -->
