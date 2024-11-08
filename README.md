@@ -241,6 +241,6 @@ All endpoints return JSON objects and adhere to RESTful API principles.
 Error Handling: Each endpoint returns appropriate status codes and error messages for invalid requests.
 Authorization: Some endpoints may require authorization in a production setting.
 
-```
+##
 
-```
+This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
